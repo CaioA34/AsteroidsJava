@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 public class Bullet {
     private double x;
     private double y;
-    private double velocidade = 10; // O tiro sobe rápido
+    private double velocidade = 10;
     private boolean ativo = true;   // Se sair da tela, vira false
 
     public Bullet(double xInicial, double yInicial) {
@@ -14,9 +14,7 @@ public class Bullet {
     }
 
     public void update() {
-        y -= velocidade; // Diminui Y para subir na tela
-
-        // Se o tiro sair pelo topo da tela (y < 0), desativa ele
+        y -= velocidade;
         if (y < 0) {
             ativo = false;
         }
@@ -24,7 +22,6 @@ public class Bullet {
 
     public void draw(GraphicsContext gc) {
         gc.setFill(Color.YELLOW);
-        // Desenha um pequeno retângulo (bala)
         gc.fillRect(x, y, 4, 10);
     }
 

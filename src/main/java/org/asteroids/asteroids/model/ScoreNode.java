@@ -3,14 +3,14 @@ package org.asteroids.asteroids.model;
 public class ScoreNode {
     String nomeJogador;
     int pontuacao;
-    int altura; // Essencial para AVL
+    int altura;
     public ScoreNode esquerda;
     public ScoreNode direita;
 
     public ScoreNode(String nome, int pontuacao) {
         this.nomeJogador = nome;
         this.pontuacao = pontuacao;
-        this.altura = 1; // Todo nó novo começa com altura 1
+        this.altura = 1;
     }
 
     // Getters para exibição

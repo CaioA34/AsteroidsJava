@@ -6,12 +6,13 @@ public class Assets {
     public static Image nave;
     public static Image asteroide;
     public static Image background;
+    public static Image background2;
     public static void carregar() {
         try {
-            // O "/" indica a raiz da pasta resources
             nave = new Image(Assets.class.getResourceAsStream("/org/asteroids/asteroids/assets/ship_1.png"));
             asteroide = new Image(Assets.class.getResourceAsStream("/org/asteroids/asteroids/assets/meteor.png"));
             background = new Image(Assets.class.getResourceAsStream("/org/asteroids/asteroids/assets/Starry_night_Layer_8.png"));
+            background2 = new Image(Assets.class.getResourceAsStream("/org/asteroids/asteroids/assets/orig.png"));
 
             System.out.println("Imagens carregadas com sucesso!");
         } catch (Exception e) {

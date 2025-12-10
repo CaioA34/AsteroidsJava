@@ -14,6 +14,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.animation.AnimationTimer;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import org.asteroids.asteroids.view.MapVisualizer;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +37,8 @@ public class AsteroidsGame extends Application {
     private EstadoJogo estadoAtual = EstadoJogo.MAPA;
 
     // Componentes Gráficos
-    private GraphicsContext gc; // O "Pincel" para desenhar o jogo
-    private Pane root;          // O Container principal
+    private GraphicsContext gc;
+    private Pane root;
     private FaseNode faseAtual;
     private MapVisualizer mapVisualizer;
     private Player player;
@@ -44,7 +47,7 @@ public class AsteroidsGame extends Application {
     private List<Asteroid> asteroides = new ArrayList<>();
     private Random random = new Random();
     private int pontos = 0;
-    private AVLTree placar = new AVLTree(); // Nossa árvore AVL
+    private AVLTree placar = new AVLTree();
 
     @Override
     public void start(Stage stage) {
@@ -61,7 +64,7 @@ public class AsteroidsGame extends Application {
         Scene scene = new Scene(root, LARGURA, ALTURA);
 
         // Tecla 'D' para simular ir para a Direita (Difícil)
-        // Tecla 'E' para simular ir para a Esquerda (Fácil) - apenas para teste
+        // Tecla 'E' para simular ir para a Esquerda (Fácil)
         scene.setOnKeyPressed(e -> {
             if (estadoAtual == EstadoJogo.MAPA) {
                 // Controles do MAPA (Navegação na Árvore)
@@ -73,12 +76,10 @@ public class AsteroidsGame extends Application {
                         if (faseAtual.getEsquerda() != null) faseAtual = faseAtual.getEsquerda();
                         break;
                     case ENTER:
-                        // Entra na fase selecionada!
                         estadoAtual = EstadoJogo.JOGANDO;
                         break;
                 }
             } else if (estadoAtual == EstadoJogo.JOGANDO) {
-                // Controles do JOGO (Nave)
                 switch (e.getCode()) {
                     case A:
                     case LEFT:
@@ -90,7 +91,7 @@ public class AsteroidsGame extends Application {
                         break;
                     case ESCAPE:
                         estadoAtual = EstadoJogo.MAPA;
-                        break; // Volta pro mapa
+                        break;
                     case SPACE:
                         tiros.add(new Bullet(player.getX() + 18, player.getY()));
                         break;
@@ -100,7 +101,6 @@ public class AsteroidsGame extends Application {
                     estadoAtual = EstadoJogo.MAPA;
                     inicializarJogo();
                 }
-                // --- NOVO: Tecla T para ver a árvore ---
                 if (e.getCode().toString().equals("T")) {
                     estadoAtual = EstadoJogo.VISUALIZAR_AVL;
                 }
@@ -153,8 +153,8 @@ public class AsteroidsGame extends Application {
     private void atualizarJogo() {
         player.update();
 
-        // 1. Criar novos asteroides (Spawn)
-        // 2% de chance a cada frame (aprox 1 asteroide por segundo)
+        // Geração de asteroides
+
         if (random.nextInt(100) < 1) {
             asteroides.add(new Asteroid(LARGURA));
         }
@@ -169,7 +169,7 @@ public class AsteroidsGame extends Application {
             }
         }
 
-        // 3. Atualizar Asteroides e Checar Colisões
+        // Atualizar Asteroides e Checar Colisões
         for (int i = 0; i < asteroides.size(); i++) {
             Asteroid a = asteroides.get(i);
             a.update();
@@ -206,32 +206,54 @@ public class AsteroidsGame extends Application {
     }
 
     private void desenharMapa() {
-        gc.setFill(Color.BLACK);
-        gc.fillRect(0, 0, LARGURA, ALTURA);
-
-        // Usa sua classe visualizadora
-        FaseNode raiz = FaseBuilder.gerarArvoreFases(); // Simplificação: pegando a raiz de novo
-        mapVisualizer.desenharArvore(gc, raiz, LARGURA, faseAtual);
-
-        gc.setFill(Color.WHITE);
-        gc.fillText("MAPA: Use A/D para escolher. ENTER para entrar na fase " + faseAtual.getId(), 20, 30);
-    }
-
-    private void desenharJogo() {
-        // Limpa a tela
-        //gc.setFill(Color.INDIGO);
-        //gc.fillRect(0, 0, LARGURA, ALTURA);
-        if (Assets.background != null) {
-            // Desenha a imagem esticada para caber na tela inteira (LARGURA, ALTURA)
-            gc.drawImage(Assets.background, 0, 0, LARGURA, ALTURA);
+        if (Assets.background2 != null) {
+            gc.drawImage(Assets.background2, 0, 0, LARGURA, ALTURA);
         } else {
-            // Fallback caso a imagem falhe (tela preta)
             gc.setFill(Color.BLACK);
             gc.fillRect(0, 0, LARGURA, ALTURA);
         }
-        // 2. Desenha a Árvore de Fases
-        // Passamos 'gerarArvoreFases()' de novo só para pegar a RAIZ da árvore para desenhar tudo
-        // (O ideal seria salvar a raiz numa variável separada, mas assim funciona rápido)]
+        gc.setFill(Color.rgb(0, 0, 0, 0.6)); // Preto 60% transparente
+        gc.fillRect(0, 0, LARGURA, ALTURA);
+
+        // TÍTULO NO TOPO
+        gc.setTextAlign(TextAlignment.CENTER); // Centraliza tudo automaticamente
+
+        // Sombra do título
+        gc.setFont(Font.font("Courier New", FontWeight.BOLD,42));
+        gc.setFill(Color.BLACK);
+        gc.fillText("SELEÇÃO DE FASE", LARGURA / 2 + 3, 83);
+
+        // Título Principal
+        gc.setFill(Color.CYAN); // Ou YELLOW, a cor que preferir
+        gc.fillText("SELEÇÃO DE FASE", LARGURA / 2, 80);
+
+        // Subtítulo
+        gc.setFont(Font.font("Courier New", FontWeight.BOLD, 18));
+        gc.setFill(Color.WHITE);
+        gc.fillText("Fase Atual: " + faseAtual.getId() + " - [" + faseAtual.getDificuldade() + "]", LARGURA / 2, 120);
+
+        // DESENHA A ÁRVORE
+        FaseNode raiz = FaseBuilder.gerarArvoreFases();
+        mapVisualizer.desenharArvore(gc, raiz, LARGURA, faseAtual);
+
+        // RODAPÉ COM INSTRUÇÕES
+        gc.setFill(Color.rgb(0, 0, 0, 0.8));
+        gc.fillRect(0, ALTURA - 60, LARGURA, 60);
+
+        gc.setFont(Font.font("Courier New", FontWeight.BOLD, 16));
+        gc.setFill(Color.LIGHTGRAY);
+        gc.fillText("Navegue com [ A / D ]   |   Pressione [ ENTER ] para Iniciar Missão", LARGURA / 2, ALTURA - 25);
+
+        gc.setTextAlign(TextAlignment.LEFT);
+    }
+
+    private void desenharJogo() {
+        if (Assets.background != null) {
+            gc.drawImage(Assets.background, 0, 0, LARGURA, ALTURA);
+        } else {
+            gc.setFill(Color.BLACK);
+            gc.fillRect(0, 0, LARGURA, ALTURA);
+        }
         player.draw(gc);
 
 
@@ -248,29 +270,74 @@ public class AsteroidsGame extends Application {
         gc.fillText("SCORE: " + pontos, LARGURA - 100, 30);
     }
     private void desenharGameOver() {
-        gc.setFill(Color.BLACK);
-        gc.fillRect(0, 0, LARGURA, ALTURA);
-        gc.setFill(Color.RED);
-        gc.setFont(javafx.scene.text.Font.font(30));
-        gc.fillText("GAME OVER", LARGURA / 2 - 80, ALTURA / 2 - 100);
-        gc.setFill(Color.WHITE);
-        gc.setFont(javafx.scene.text.Font.font(12)); // Fonte normal
-        gc.fillText("Sua Pontuação: " + pontos, LARGURA / 2 - 50, ALTURA / 2 - 60);
-        gc.setFill(Color.CYAN);
-        gc.fillText("--- RANKING (AVL TREE) ---", LARGURA / 2 - 80, ALTURA / 2 - 20);
-        List<String> topScores = placar.getTopScores();
-        int y = ALTURA / 2;
-        for (String s : topScores) {
-            gc.fillText(s, LARGURA / 2 - 60, y);
-            y += 20;
+        if (Assets.background != null) {
+            gc.drawImage(Assets.background, 0, 0, LARGURA, ALTURA);
         }
+
+        gc.setFill(Color.rgb(0, 0, 0, 0.85));
+        gc.fillRect(0, 0, LARGURA, ALTURA);
+
+        gc.setTextAlign(TextAlignment.CENTER);
+
+        // TÍTULO "GAME OVER"
+        gc.setFont(Font.font("Arial", FontWeight.BLACK, 60)); // Fonte Grossa
+
+        gc.setFill(Color.BLACK);
+        gc.fillText("GAME OVER", LARGURA / 2 + 3, ALTURA / 2 - 147);
+
+        gc.setFill(Color.RED);
+        gc.fillText("GAME OVER", LARGURA / 2, ALTURA / 2 - 150);
+
+        // PONTUAÇÃO FINAL DO JOGADOR
+        gc.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        gc.setFill(Color.WHITE);
+        gc.fillText("Sua Pontuação Final", LARGURA / 2, ALTURA / 2 - 90);
+
+        gc.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 40));
         gc.setFill(Color.YELLOW);
-        gc.fillText("Pressione 'T' para visualizar a Árvore AVL Gráfica", LARGURA/2 - 100, ALTURA - 80);
-        gc.setFill(Color.GRAY);
-        gc.fillText("Pressione ENTER para voltar ao Mapa", LARGURA / 2 - 100, ALTURA - 50);
+        gc.fillText(String.valueOf(pontos), LARGURA / 2, ALTURA / 2 - 50);
+
+        double boxWidth = 400;
+        double boxHeight = 250;
+        double boxX = (LARGURA - boxWidth) / 2;
+        double boxY = ALTURA / 2 - 8;
+
+        gc.setFill(Color.rgb(50, 50, 70, 0.8));
+        gc.setStroke(Color.CYAN); // Borda Neon
+        gc.setLineWidth(2);
+        gc.fillRoundRect(boxX, boxY, boxWidth, boxHeight, 20, 20); // Cantos arredondados
+        gc.strokeRoundRect(boxX, boxY, boxWidth, boxHeight, 20, 20);
+
+        // Ranking
+        gc.setFill(Color.CYAN);
+        gc.setFont(Font.font("Courier New", FontWeight.BOLD, 18));
+        gc.fillText("- SCORE RANKING (AVL TREE) -", LARGURA / 2, boxY + 30);
+
+        // Lista os Top Scores
+        List<String> topScores = placar.getTopScores();
+        gc.setFont(Font.font("Courier New", 16));
+        gc.setFill(Color.WHITE);
+
+        int maxScores = 7;
+        for (int i = 0; i < Math.min(topScores.size(), maxScores); i++) {
+            String s = topScores.get(i);
+            // Desenha linha por linha
+            gc.fillText(s, LARGURA / 2, boxY + 60 + (i * 25));
+        }
+
+        // RODAPÉ
+        gc.setFont(Font.font("Courier New", 16));
+
+        gc.setFill(Color.rgb(100, 255, 100)); // Verde Matrix
+        gc.fillText("[ T ]  VISUALIZAR ESTRUTURA AVL", LARGURA / 2, ALTURA - 80);
+
+        gc.setFont(Font.font("Courier New", 16));
+        gc.setFill(Color.LIGHTGRAY);
+        gc.fillText("Pressione [ ENTER ] para Reiniciar a Missão", LARGURA / 2, ALTURA - 30);
+
+        gc.setTextAlign(TextAlignment.LEFT);
     }
     private void desenharArvoreAVL() {
-        // Limpa a tela com uma cor de fundo diferente (ex: cinza escuro)
         gc.setFill(Color.rgb(30, 30, 40));
         gc.fillRect(0, 0, LARGURA, ALTURA);
 
@@ -281,7 +348,6 @@ public class AsteroidsGame extends Application {
         gc.setFont(javafx.scene.text.Font.font(12));
         gc.fillText("Pressione ESC para voltar", 20, 50);
 
-        // Chama o visualizador passando a raiz da AVL
         mapVisualizer.desenharArvoreAVL(gc, placar.getRaiz(), LARGURA);
     }
 

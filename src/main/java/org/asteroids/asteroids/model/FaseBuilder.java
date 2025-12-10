@@ -13,14 +13,11 @@ public class FaseBuilder {
 
         // --- NÍVEL 3 (Filhos do lado Fácil) ---
         raiz.getEsquerda().setEsquerda(new FaseNode(4, "FACIL_2"));
-        raiz.getEsquerda().setDireita(new FaseNode(5, "MEDIO_1"));
+        raiz.getEsquerda().setDireita(new FaseNode(5, "FACIL_3"));
 
         // --- NÍVEL 3 (Filhos do lado Difícil) ---
-        raiz.getDireita().setEsquerda(new FaseNode(6, "MEDIO_2"));
-        raiz.getDireita().setDireita(new FaseNode(7, "CHEFE_DIFICIL"));
-
-        // Dica: Para o trabalho final, você pode adicionar mais níveis aqui.
-        // Uma árvore com altura 3 ou 4 já é suficiente para demonstrar o conceito.
+        raiz.getDireita().setEsquerda(new FaseNode(6, "DIFICIL_2"));
+        raiz.getDireita().setDireita(new FaseNode(7, "DIFICIL_3"));
 
         return raiz;
     }

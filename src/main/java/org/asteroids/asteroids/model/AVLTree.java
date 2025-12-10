@@ -62,7 +62,7 @@ public class AVLTree {
     }
 
     private ScoreNode inserirRec(ScoreNode node, String nome, int pontuacao) {
-        // 1. Inserção normal de BST (Binary Search Tree)
+        // Inserção
         if (node == null)
             return (new ScoreNode(nome, pontuacao));
 
@@ -71,32 +71,32 @@ public class AVLTree {
             node.esquerda = inserirRec(node.esquerda, nome, pontuacao);
         else if (pontuacao > node.pontuacao)
             node.direita = inserirRec(node.direita, nome, pontuacao);
-        else // Pontuações iguais não permitidas ou ignoradas para simplificar
+        else // Pontuações iguais não permitidas
             return node;
 
-        // 2. Atualiza altura do ancestral
+        // Atualiza altura
         node.altura = 1 + max(altura(node.esquerda), altura(node.direita));
 
-        // 3. Checa o fator de balanceamento
+        // Checa o fator de balanceamento
         int balance = getBalanceamento(node);
 
-        // Se estiver desbalanceado, temos 4 casos:
+        // Balanceamento
 
-        // Caso Esquerda-Esquerda
+        // Esquerda-Esquerda
         if (balance > 1 && pontuacao < node.esquerda.pontuacao)
             return rotacaoDireita(node);
 
-        // Caso Direita-Direita
+        // Direita-Direita
         if (balance < -1 && pontuacao > node.direita.pontuacao)
             return rotacaoEsquerda(node);
 
-        // Caso Esquerda-Direita
+        // Esquerda-Direita
         if (balance > 1 && pontuacao > node.esquerda.pontuacao) {
             node.esquerda = rotacaoEsquerda(node.esquerda);
             return rotacaoDireita(node);
         }
 
-        // Caso Direita-Esquerda
+        // Direita-Esquerda
         if (balance < -1 && pontuacao < node.direita.pontuacao) {
             node.direita = rotacaoDireita(node.direita);
             return rotacaoEsquerda(node);
@@ -105,9 +105,7 @@ public class AVLTree {
         return node;
     }
 
-    // --- LISTAGEM (Para mostrar na tela) ---
-    // Fazemos um percurso "In-Order Inverso" (Direita, Raiz, Esquerda)
-    // para pegar do maior para o menor
+    // Faz um in-order ao contrário (Direita, Raiz, Esquerda)
     public List<String> getTopScores() {
         List<String> lista = new ArrayList<>();
         percorrerDecrescente(raiz, lista);
