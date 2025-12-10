@@ -48,6 +48,7 @@ public class AsteroidsGame extends Application {
 
     @Override
     public void start(Stage stage) {
+        Assets.carregar();
         faseAtual = FaseBuilder.gerarArvoreFases();
         mapVisualizer = new MapVisualizer();
         inicializarJogo();
@@ -120,9 +121,9 @@ public class AsteroidsGame extends Application {
                 }
             }
         });
-        stage.setTitle("Galaga - Estrutura de Dados II");
+        stage.setTitle("Asteroids - Estrutura de Dados II");
         stage.setScene(scene);
-        stage.setResizable(true);
+        stage.setResizable(false);
         stage.show();
 
         new AnimationTimer() {
@@ -218,9 +219,16 @@ public class AsteroidsGame extends Application {
 
     private void desenharJogo() {
         // Limpa a tela
-        gc.setFill(Color.INDIGO);
-        gc.fillRect(0, 0, LARGURA, ALTURA);
-
+        //gc.setFill(Color.INDIGO);
+        //gc.fillRect(0, 0, LARGURA, ALTURA);
+        if (Assets.background != null) {
+            // Desenha a imagem esticada para caber na tela inteira (LARGURA, ALTURA)
+            gc.drawImage(Assets.background, 0, 0, LARGURA, ALTURA);
+        } else {
+            // Fallback caso a imagem falhe (tela preta)
+            gc.setFill(Color.BLACK);
+            gc.fillRect(0, 0, LARGURA, ALTURA);
+        }
         // 2. Desenha a Árvore de Fases
         // Passamos 'gerarArvoreFases()' de novo só para pegar a RAIZ da árvore para desenhar tudo
         // (O ideal seria salvar a raiz numa variável separada, mas assim funciona rápido)]

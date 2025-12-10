@@ -1,6 +1,8 @@
 package org.asteroids.asteroids.game;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import org.asteroids.asteroids.Assets;
+
 import java.util.Random;
 
 public class Asteroid {
@@ -37,12 +39,17 @@ public class Asteroid {
     }
 
     public void draw(GraphicsContext gc) {
-        gc.setFill(Color.BROWN); // Cor de pedra
-        gc.fillOval(x, y, tamanho, tamanho);
+        //gc.setFill(Color.BROWN); // Cor de pedra
+        //gc.fillOval(x, y, tamanho, tamanho);
 
         // Um detalhe cinza para parecer pedra (opcional)
-        gc.setFill(Color.GRAY);
-        gc.fillOval(x + 5, y + 5, tamanho / 3, tamanho / 3);
+        //gc.setFill(Color.GRAY);
+        //gc.fillOval(x + 5, y + 5, tamanho / 3, tamanho / 3);
+
+        if (Assets.asteroide != null) {
+            // Opcional: Efeito de rotação (avançado), mas desenhar simples funciona bem:
+            gc.drawImage(Assets.asteroide, x, y, tamanho, tamanho);
+        }
     }
 
     // Getters para colisão
