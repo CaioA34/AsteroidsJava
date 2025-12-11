@@ -66,7 +66,7 @@ Para o placar, foi implementada uma árvore AVL completa com rotações (Simples
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/seu-usuario/galaga-avl.git](https://github.com/seu-usuario/galaga-avl.git)
+    git clone [https://github.com/CaioA34/AsteroidsJava.git](https://github.com/CaioA34/AsteroidsJava.git)
     ```
 2.  **Abra o projeto:**
     * Abra o IntelliJ > `File` > `Open` > Selecione a pasta do projeto.
