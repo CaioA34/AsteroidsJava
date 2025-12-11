@@ -1,5 +1,5 @@
 Atividade de Estrutura de Dados II aplicando conceitos de árvore.
-# Galaga AVL - Projeto Final de Estrutura de Dados II
+# Asteroids AVL - Projeto Final de Estrutura de Dados II
 
 > Um jogo de nave desenvolvido em JavaFX, demonstrando a aplicação prática de estruturas de dados (Árvores Binárias e AVL).
 
